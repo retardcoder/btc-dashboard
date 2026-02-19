@@ -535,7 +535,7 @@
   Example: window.__RAILWAY_WS_URL__ = "wss://btc-agent.up.railway.app";
   Get this URL from Railway dashboard after deploying
 -->
-<script>window.__RAILWAY_WS_URL__ = "wss://btc-agent-production.up.railway.app";</script>
+<script>window.__RAILWAY_WS_URL__ = "wss://btc-agent.railway.internal";</script>
 </head>
 <body>
 
@@ -659,7 +659,9 @@ let ws;
 
 // If RAILWAY_WS_URL is set in the page, use it
 // Otherwise fall back to same host (local dev)
-const WS_URL = window.__RAILWAY_WS_URL__ || `ws://${location.host}`;
+// Append /ws path for Railway compatibility
+const _rawUrl = window.__RAILWAY_WS_URL__ || `ws://${location.host}`;
+const WS_URL = _rawUrl.endsWith('/ws') ? _rawUrl : _rawUrl + '/ws';
 
 function connect() {
   ws = new WebSocket(WS_URL);
